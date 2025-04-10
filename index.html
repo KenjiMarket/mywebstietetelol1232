@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KingX</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --accent-color: #007bff;
+            --discord-color: #5865F2;
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+        
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            background: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .home-content {
+            text-align: left;
+            position: relative;
+            min-height: 200px;
+        }
+        
+        .home-buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .home-btn, .discord-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .home-btn {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+        
+        .discord-btn {
+            background: var(--discord-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .discord-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .store-btn {
+            position: relative;
+            height: 150px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            background: transparent;
+        }
+
+        .store-img-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .store-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .store-btn-text {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .store-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .store-btn:hover::before {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .donate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .donate-option {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.3s ease;
+        }
+        
+        .donate-option:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        
+        .payment-title {
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        .payment-address {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .payment-address:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .payment-address:hover::after {
+            content: "Click to copy";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .copied-message {
+            color: #00ff88;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .donate-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .credits-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        
+        .credits-table th, .credits-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .credits-table th {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        
+        .credits-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        .visit-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .visit-btn:hover {
+            background: #0069d9;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'home')">Home</button>
+            <button class="tab" onclick="openTab(event, 'stores')">Stores</button>
+            <button class="tab" onclick="openTab(event, 'donate')">Donate</button>
+            <button class="tab" onclick="openTab(event, 'credits')">Credits</button>
+        </div>
+        
+        <div id="home" class="tab-content active">
+            <div class="card">
+                <div class="home-content">
+                    <h1>Welcome to KingX</h1>
+                    <p>Explore our stores or support my Creation!</p>
+                    
+                    <div class="home-buttons">
+                        <a href="#" class="home-btn" onclick="openTab(event, 'stores')">Visit Stores</a>
+                        <button class="discord-btn" onclick="window.open('https://discord.gg/QN6SUrS6wu', '_blank')">Join Discord</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="stores" class="tab-content">
+            <div class="card">
+                <h1>Game Stores</h1>
+                <p>Visit our official stores for cool in-game items:</p>
+                
+                <div class="stores-grid">
+                    <button class="store-btn" onclick="window.open('https://lt2king.mysellauth.com/', '_blank')">
+                        <div class="store-img-container">
+                            <img src="https://i.ibb.co/8nR0R0Tg/lt2art.jpg" alt="Lumber Tycoon 2">
+                        </div>
+                        <span class="store-btn-text">Lumber Tycoon 2 Store</span>
+                    </button>
+                    
+                    <button class="store-btn" onclick="window.open('https://mm2king.mysellauth.com/', '_blank')">
+                        <div class="store-img-container">
+                            <img src="https://i.ibb.co/ycTd9SjS/mm2art.jpg" alt="Murder Mystery 2">
+                        </div>
+                        <span class="store-btn-text">Murder Mystery 2 Store</span>
+                    </button>
+                    
+                    <button class="store-btn" onclick="window.open('https://petsgoking.mysellauth.com/', '_blank')">
+                        <div class="store-img-container">
+                            <img src="https://i.ibb.co/Fk3DdmXQ/petsgoart.jpg" alt="Pets Go">
+                        </div>
+                        <span class="store-btn-text">Pets Go Store</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="donate" class="tab-content">
+            <div class="card">
+                <h1>Support My Work</h1>
+                <p>Choose your preferred payment method:</p>
+                
+                <div class="donate-grid">
+                    <div class="donate-option">
+                        <div class="payment-header">
+                            <img src="images/btc.png" class="payment-icon" alt="Bitcoin">
+                            <h3 class="payment-title">Bitcoin (BTC)</h3>
+                        </div>
+                        <div class="payment-address" onclick="copyToClipboard(this, 'bc1pm02wfmn24f2vwlt56z9tgtlkjnynxrkhf096p4ar0yer7l6fv4fqpp5swl')">
+                            bc1pm02wfmn24f2vwlt56z9tgtlkjnynxrkhf096p4ar0yer7l6fv4fqpp5swl
+                        </div>
+                        <div class="copied-message"></div>
+                    </div>
+                    
+                    <div class="donate-option">
+                        <div class="payment-header">
+                            <img src="images/etc.png" class="payment-icon" alt="Ethereum">
+                            <h3 class="payment-title">Ethereum (ETH)</h3>
+                        </div>
+                        <div class="payment-address" onclick="copyToClipboard(this, '0xc55E356a5D4373F132FBc0C21E8728aa0999cF21')">
+                            0xc55E356a5D4373F132FBc0C21E8728aa0999cF21
+                        </div>
+                        <div class="copied-message"></div>
+                    </div>
+                    
+                    <div class="donate-option">
+                        <div class="payment-header">
+                            <img src="images/solana.png" class="payment-icon" alt="Solana">
+                            <h3 class="payment-title">Solana (SOL)</h3>
+                        </div>
+                        <div class="payment-address" onclick="copyToClipboard(this, '4xbfxP1MBg1yqHKf35EC66F2oXdAn7osVoNSw9Nov7zs')">
+                            4xbfxP1MBg1yqHKf35EC66F2oXdAn7osVoNSw9Nov7zs
+                        </div>
+                        <div class="copied-message"></div>
+                    </div>
+                    
+                    <div class="donate-option">
+                        <div class="payment-header">
+                            <img src="images/cashapp.png" class="payment-icon" alt="Cash App">
+                            <h3 class="payment-title">Cash App</h3>
+                        </div>
+                        <div class="payment-address" onclick="copyToClipboard(this, '$idrkdawson')">
+                            $idrkdawson
+                        </div>
+                        <div class="copied-message"></div>
+                    </div>
+                    
+                    <div class="donate-option">
+                        <div class="payment-header">
+                            <img src="images/paypal.png" class="payment-icon" alt="PayPal">
+                            <h3 class="payment-title">PayPal</h3>
+                        </div>
+                        <a href="https://paypal.me/YourUsername" class="donate-btn" target="_blank">
+                            Donate via PayPal
+                        </a>
+                        <p style="margin-top: 0.5rem; opacity: 0.7; font-size: 0.9rem;">
+                            Still setting up!!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="credits" class="tab-content">
+            <div class="card">
+                <h1>Credits</h1>
+                <p>Thank you to everyone who has contributed to making KingX possible</p>
+                
+                <table class="credits-table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="pfps/pfp1.png" class="avatar" alt="Rizve"></td>
+                            <td><strong>Kenji</strong></td>
+                            <td>Owner of King & Website Creation</td>
+                            <td><a href="#" class="visit-btn">Visit ☑</a></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp2.gif" class="avatar" alt="Nano"></td>
+                            <td><strong>Celeron</strong></td>
+                            <td>My homie</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp3.png"class="avatar" alt="Voxlis"></td>
+                            <td><strong>Peerless God</strong></td>
+                            <td>Helper</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp5.png" class="avatar" alt="Mxx_xx3"></td>
+                            <td><strong>Bella</strong></td>
+                            <td>Ideas</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp4.png" class="avatar" alt="Http2"></td>
+                            <td><strong>Tubulisc</strong></td>
+                            <td>Supporter</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp6.jpg" class="avatar" alt="Http2"></td>
+                            <td><strong>Jerry</strong></td>
+                            <td>Supporter</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function copyToClipboard(element, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const message = element.nextElementSibling;
+                message.textContent = "Copied!";
+                message.style.opacity = 1;
+                setTimeout(() => message.style.opacity = 0, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
