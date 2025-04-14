@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KingX</title>
     <style>
         :root {
@@ -13,45 +13,30 @@
             --card-bg: rgba(255, 255, 255, 0.05);
         }
         
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
         body {
             background: var(--bg-color);
             color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            -webkit-text-size-adjust: 100%;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 2rem;
         }
         
-        /* Mobile-optimized tabs */
         .tabs {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        
-        .tabs::-webkit-scrollbar {
-            display: none;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
         
         .tab {
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1.5rem;
             background: transparent;
             color: var(--text-color);
             border: none;
@@ -59,9 +44,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            flex-shrink: 0;
         }
         
         .tab.active {
@@ -70,7 +52,7 @@
         
         .tab-content {
             display: none;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
         
         .tab-content.active {
@@ -80,37 +62,35 @@
         .card {
             background: var(--card-bg);
             border-radius: 8px;
-            padding: 1.25rem;
+            padding: 2rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1rem;
+            position: relative;
         }
 
-        /* Mobile-first home section */
         .home-content {
             text-align: left;
+            position: relative;
+            min-height: 200px;
         }
         
         .home-buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
             display: flex;
-            flex-direction: row;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 1rem;
         }
         
         .home-btn, .discord-btn {
-            padding: 0.75rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-align: center;
             display: inline-block;
-            font-size: 0.95rem;
-            flex: 1 1 120px;
-            border: none;
-            cursor: pointer;
         }
         
         .home-btn {
@@ -118,29 +98,48 @@
             color: white;
         }
         
+        .home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+        
         .discord-btn {
             background: var(--discord-color);
             color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .discord-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
         }
 
-        /* Responsive stores grid */
         .stores-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
             margin-top: 1rem;
         }
         
         .store-btn {
             position: relative;
-            height: 100px;
+            height: 150px;
             width: 100%;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
             border: none;
             cursor: pointer;
             padding: 0;
             background: transparent;
+        }
+
+        .store-img-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         .store-img-container img {
@@ -151,12 +150,12 @@
 
         .store-btn-text {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-            font-size: 1rem;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.3rem;
             font-weight: 600;
             color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             z-index: 2;
         }
 
@@ -169,177 +168,153 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.4);
             z-index: 1;
+            transition: all 0.3s ease;
         }
 
-        /* Donate section */
+        .store-btn:hover::before {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
         .donate-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
         
         .donate-option {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 12px;
+            padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.3s ease;
+        }
+        
+        .donate-option:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
         }
         
         .payment-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
         
         .payment-icon {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
         }
         
         .payment-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin: 0;
+            font-weight: 500;
         }
         
         .payment-address {
             background: rgba(0, 0, 0, 0.3);
-            padding: 0.5rem;
-            border-radius: 6px;
+            padding: 0.75rem;
+            border-radius: 8px;
             font-family: monospace;
             word-break: break-all;
             cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .payment-address:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .payment-address:hover::after {
+            content: "Click to copy";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
             font-size: 0.8rem;
         }
         
         .copied-message {
             color: #00ff88;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
             opacity: 0;
+            transition: opacity 0.3s;
         }
         
         .donate-btn {
             display: inline-block;
-            padding: 0.75rem;
+            padding: 0.75rem 1.5rem;
             background: var(--accent-color);
             color: white;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 500;
-            margin-top: 0.75rem;
-            font-size: 0.95rem;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Credits table */
-        .credits-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
         }
         
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
         .credits-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
-            min-width: 600px;
+            margin-top: 1.5rem;
         }
         
         .credits-table th, .credits-table td {
-            padding: 0.75rem;
+            padding: 1rem;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
+        }
+        
+        .credits-table th {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        
+        .credits-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
         }
         
         .avatar {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            margin-right: 0.5rem;
+            vertical-align: middle;
         }
         
         .visit-btn {
-            padding: 0.4rem 0.8rem;
+            display: inline-block;
+            padding: 0.5rem 1rem;
             background: var(--accent-color);
             color: white;
             border-radius: 4px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
-
-        /* Section divider */
-        .section-divider {
-            margin: 1.5rem 0;
-            border: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Desktop styles */
-        @media (min-width: 768px) {
-            .container {
-                padding: 2rem;
-            }
-            
-            .tabs {
-                flex-wrap: wrap;
-                overflow-x: visible;
-                gap: 0.75rem;
-            }
-            
-            .tab {
-                padding: 0.75rem 1.25rem;
-                font-size: 1rem;
-            }
-            
-            .card {
-                padding: 1.5rem;
-            }
-            
-            .home-buttons {
-                flex-direction: row;
-                justify-content: flex-start;
-            }
-            
-            .home-btn, .discord-btn {
-                flex: 0 1 auto;
-                padding: 0.75rem 1.5rem;
-            }
-            
-            .stores-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1rem;
-            }
-            
-            .store-btn {
-                height: 120px;
-            }
-            
-            .donate-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 1rem;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .home-buttons {
-                position: absolute;
-                top: 1.5rem;
-                right: 1.5rem;
-                flex-direction: column;
-                margin-top: 0;
-            }
-            
-            .store-btn {
-                height: 140px;
-            }
+        
+        .visit-btn:hover {
+            background: #0069d9;
+            transform: translateY(-2px);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -392,28 +367,6 @@
                             <img src="https://i.ibb.co/Fk3DdmXQ/petsgoart.jpg" alt="Pets Go">
                         </div>
                         <span class="store-btn-text">Pets Go Store</span>
-                    </button>
-                </div>
-
-                <!-- Other Stores Section -->
-                <hr class="section-divider">
-                
-                <h2>Other Stores</h2>
-                <p>More places to explore:</p>
-                
-                <div class="stores-grid">
-                    <button class="store-btn" onclick="window.open('https://example.com/store1', '_blank')">
-                        <div class="store-img-container">
-                            <img src="https://via.placeholder.com/300" alt="Example Store 1">
-                        </div>
-                        <span class="store-btn-text">soon..</span>
-                    </button>
-                    
-                    <button class="store-btn" onclick="window.open('https://example.com/store2', '_blank')">
-                        <div class="store-img-container">
-                            <img src="https://via.placeholder.com/300" alt="Example Store 2">
-                        </div>
-                        <span class="store-btn-text">also soon..</span>
                     </button>
                 </div>
             </div>
@@ -490,78 +443,72 @@
                 <h1>Credits</h1>
                 <p>Thank you to everyone who has contributed to making KingX possible</p>
                 
-                <div class="credits-container">
-                    <table class="credits-table">
-                        <thead>
-                            <tr>
-                                <th>Avatar</th>
-                                <th>Name</th>
-                                <th>Role</th>
-                                <th>Link</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><img src="pfps/pfp1.png" class="avatar" alt="Rizve"></td>
-                                <td><strong>Kenji</strong></td>
-                                <td>Owner of King & Website Creation</td>
-                                <td><a href="#" class="visit-btn">Visit ☑</a></td>
-                            </tr>
-                            <tr>
-                                <td><img src="pfps/pfp2.gif" class="avatar" alt="Nano"></td>
-                                <td><strong>Celeron</strong></td>
-                                <td>My homie</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><img src="pfps/pfp3.png"class="avatar" alt="Voxlis"></td>
-                                <td><strong>Peerless God</strong></td>
-                                <td>Helper</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><img src="pfps/pfp5.png" class="avatar" alt="Mxx_xx3"></td>
-                                <td><strong>Bella</strong></td>
-                                <td>Ideas</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><img src="pfps/pfp4.png" class="avatar" alt="Http2"></td>
-                                <td><strong>Tubulisc</strong></td>
-                                <td>Supporter</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><img src="pfps/pfp6.jpg" class="avatar" alt="Http2"></td>
-                                <td><strong>Jerry</strong></td>
-                                <td>Supporter</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="credits-table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="pfps/pfp1.png" class="avatar" alt="Rizve"></td>
+                            <td><strong>Kenji</strong></td>
+                            <td>Owner of King & Website Creation</td>
+                            <td><a href="#" class="visit-btn">Visit ☑</a></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp2.gif" class="avatar" alt="Nano"></td>
+                            <td><strong>Celeron</strong></td>
+                            <td>My homie</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp3.png"class="avatar" alt="Voxlis"></td>
+                            <td><strong>Peerless God</strong></td>
+                            <td>Helper</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp5.png" class="avatar" alt="Mxx_xx3"></td>
+                            <td><strong>Bella</strong></td>
+                            <td>Ideas</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp4.png" class="avatar" alt="Http2"></td>
+                            <td><strong>Tubulisc</strong></td>
+                            <td>Supporter</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><img src="pfps/pfp6.jpg" class="avatar" alt="Http2"></td>
+                            <td><strong>Jerry</strong></td>
+                            <td>Supporter</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
         function openTab(evt, tabName) {
-            // Close all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
             
-            // Deactivate all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
             
-            // Activate clicked tab
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
-            
-            // Scroll to top on mobile
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
         }
         
         function copyToClipboard(element, text) {
@@ -570,18 +517,8 @@
                 message.textContent = "Copied!";
                 message.style.opacity = 1;
                 setTimeout(() => message.style.opacity = 0, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
             });
         }
-
-        // Better touch handling
-        document.addEventListener('touchstart', function(){}, {passive: true});
-        
-        // Prevent zoom on double-tap
-        document.addEventListener('dblclick', function(e) {
-            e.preventDefault();
-        }, { passive: false });
     </script>
 </body>
 </html>
